@@ -11,5 +11,7 @@ import RealmSwift
 
 class Category: Object {
     @objc dynamic var name: String = ""
+    
+    // Jede Category kann eine Liste von Item-Objekten haben
     let items = List<Item>()
 }

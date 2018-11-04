@@ -14,5 +14,6 @@ class Item: Object {
     @objc dynamic var done: Bool = false
     @objc dynamic var dateCreated: Date?
     
+    // Inversere Beziehung zur parent Category 
     var parentCategory = LinkingObjects(fromType: Category.self, property: "items")
 }

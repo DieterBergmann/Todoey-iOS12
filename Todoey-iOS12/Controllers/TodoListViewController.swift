@@ -14,7 +14,7 @@ class TodoListViewController: UITableViewController {
     var todoItems: Results<Item>?
     let realm = try! Realm()
     
-    // Load TODO-List Items
+    // Wenn das Property selectecCategory gesetzt wird werden die Items geladen (Property Observer)
     var selectedCategory: Category? {
         didSet{
             loadItems()
@@ -119,16 +119,17 @@ class TodoListViewController: UITableViewController {
 }
 
 // MARK: - Searchbar methods
-
 extension TodoListViewController: UISearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
+        // Suchen mit Hilfe von Predicate-Kriterien
         todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
         
         tableView.reloadData()
     }
 
+    // Dismiss the searchBar
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
             loadItems()

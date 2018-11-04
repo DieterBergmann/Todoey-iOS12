@@ -11,18 +11,22 @@ import RealmSwift
 
 class CategoryViewController: UITableViewController {
     
+    // Erzeugen eines neunen realm Database Objektes
     let realm = try! Realm()
+    // Auto-updating Container für Catogory-Elemtene
     var categories: Results<Category>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Laden aller aktuellen Category-Elemete
         loadCategories()
 
     }
     
     // MARK: - TableView Datasource Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         // Nil-Coalescing Operator (a ?? b) unwrapps an optional a if is not nil otherwise it returns a default value b
         return categories?.count ?? 1
     }
@@ -30,7 +34,7 @@ class CategoryViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         
-        cell.textLabel?.text = categories?[indexPath.row].name ?? " No Categories Added yet"
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added yet"
         
         return cell
     }
@@ -41,9 +45,12 @@ class CategoryViewController: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Erzeugen einer Instanz des Ziel-ViewControllers (TodoListViewController)
         let destinationVC = segue.destination as! TodoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
+            // Übergeben der im CategoryViewController selektierten category an das entsprechende Property
+            // im TodoListViewController
             destinationVC.selectedCategory = categories?[indexPath.row]
         }
     }
@@ -74,6 +81,7 @@ class CategoryViewController: UITableViewController {
     // MARK: - Data Manipilation Methods
     func save(category: Category) {
         do {
+            // Übergeben von Änderungen an Realm
             try realm.write {
                 realm.add(category)
             }
@@ -85,8 +93,11 @@ class CategoryViewController: UITableViewController {
     }
     
     func loadCategories() {
+        
+        // Holen aller Category-Elemte die in Realm gespeichert sind
         categories = realm.objects(Category.self)
         
+        // reloadData ruft alle Datasource Methoden auf
         tableView.reloadData()
     }
 }
